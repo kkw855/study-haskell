@@ -28,3 +28,12 @@ qsortReverse (x : xs) = qsortReverse larger ++ [x] ++ qsortReverse smaller
   where
     smaller = [a | a <- xs, a <= x]
     larger = [b | b <- xs, b > x]
+
+n :: Int
+n = a `div` length xs
+  where
+      a = 10
+      xs = [1,2,3,4,5] :: [Int]
+
+add' :: Int -> Int -> Int
+add' x y = x + y
