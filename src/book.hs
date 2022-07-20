@@ -111,3 +111,64 @@ lowers xs = length [x | x <- xs, x >= 'a' && x <= 'z']
 count :: Char -> String -> Int
 count x xs = length [x' | x' <- xs, x == x']
 
+let2int :: Char -> Int
+let2int c = ord c - ord 'a'
+
+int2let :: Int -> Char
+int2let n = chr (ord 'a' + n)
+
+shift :: Int -> Char -> Char
+shift n c
+  | isLower c = int2let ((let2int c + n) `mod` 26)
+  | otherwise = c
+
+encode :: Int -> String -> String
+encode n xs = [shift n x | x <- xs]
+
+percent :: Int -> Int -> Float
+percent n m = (fromIntegral n / fromIntegral m) * 100
+
+freqs :: String -> [Float]
+freqs xs = [percent (count x xs) n | x <- ['a' .. 'z']]
+  where
+    n = lowers xs
+
+sum3 :: Num a => [a] -> a
+sum3 = foldr (+) 0
+
+product2 :: Num a => [a] -> a
+product2 = foldr (*) 1
+
+or' :: [Bool] -> Bool
+or' = foldr (||) False
+
+type Pos = (Int, Int)
+
+type Trans = Pos -> Pos
+
+type Pair a = (a, a)
+
+type Assoc k v = [(k, v)]
+
+data Move = North | South | East | West
+
+move :: Move -> Pos -> Pos
+move North (x, y) = (x, y + 1)
+move South (x, y) = (x, y -1)
+move East (x, y) = (x + 1, y)
+move West (x, y) = (x -1, y)
+
+moves :: [Move] -> Pos -> Pos
+moves [] p = p
+moves (m : ms) p = moves ms (move m p)
+
+rev :: Move -> Move
+rev North = South
+rev South = North
+rev East = West
+rev West = East
+
+data Shape = Circle Float | Rect Float Float deriving Show
+
+square' :: Float -> Shape
+square' n = Rect n n
