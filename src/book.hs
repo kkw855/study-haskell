@@ -168,7 +168,41 @@ rev South = North
 rev East = West
 rev West = East
 
-data Shape = Circle Float | Rect Float Float deriving Show
+data Shape = Circle Float | Rect Float Float deriving (Show, Eq, Ord)
 
 square' :: Float -> Shape
 square' n = Rect n n
+
+area :: Shape -> Float
+area (Circle r) = pi * r ^ (2 :: Int)
+area (Rect x y) = x * y
+
+safediv :: Int -> Int -> Maybe Int
+safediv _ 0 = Nothing
+safediv m n = Just (m `div` n)
+
+safehead :: [a] -> Maybe a
+safehead [] = Nothing
+safehead (x : _) = Just x
+
+data Nat = Zero | Succ Nat
+
+nat2int :: Nat -> Int
+nat2int Zero = 0
+nat2int (Succ n) = 1 + nat2int n
+
+int2nat :: Int -> Nat
+int2nat 0 = Zero
+int2nat n = Succ (int2nat (n -1))
+
+add4 :: Nat -> Nat -> Nat
+add4 m n = int2nat (nat2int m + nat2int n)
+
+data Tree a = Leaf a | Node (Tree a) (Tree a) deriving (Show)
+
+instance Functor Tree where
+  fmap g (Leaf x) = Leaf (g x)
+  fmap g (Node l r) = Node (fmap g l) (fmap g r)
+
+inc :: Functor f => f Int -> f Int
+inc = fmap (+ 1)
